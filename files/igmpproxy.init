@@ -10,6 +10,9 @@ igmp_header() {
 	local quickleave verbose
 	config_get_bool quickleave "$1" quickleave 0
 	config_get verbose "$1" verbose 1
+        config_get robustness "$1" robustness 2
+        config_get interval_query "$1" interval_query 125
+        config_get interval_query_response "$1" interval_query_response 10	
 
 	[ $verbose = "0" ] && logopts="-d"
 	[ $verbose = "2" ] && logopts="-v"
@@ -18,6 +21,9 @@ igmp_header() {
 	mkdir -p /var/etc
 	rm -f /var/etc/igmpproxy.conf
 	[ $quickleave -gt 0 ] && echo "quickleave" >> /var/etc/igmpproxy.conf
+	[ $robustness -gt 0 ] && echo "robustness $robustness" >> /var/etc/igmpproxy.conf
+	[ $interval_query -gt 0 ] && echo "interval_query $interval_query" >> /var/etc/igmpproxy.conf
+	[ $interval_query_response -gt 0 ] && echo "interval_query_response $interval_query_response" >> /var/etc/igmpproxy.conf
 
 	[ -L /etc/igmpproxy.conf ] || ln -nsf /var/etc/igmpproxy.conf /etc/igmpproxy.conf
 }
